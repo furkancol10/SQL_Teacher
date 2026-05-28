@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Mastery — Interactive SQL Learning Guide</title>
+  <meta name="description" content="Learn SQL from the ground up with interactive examples. Covers SELECT, JOINs, subqueries, window functions, CTEs, and more." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle sidebar">☰</button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ── Sidebar ──────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">SQL</div>
+          <div class="sidebar-logo-text">
+            <h1>SQL Mastery</h1>
+            <span>Interactive Guide</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-progress">
+        <div class="progress-label">
+          <span>Your Progress</span>
+          <strong id="progressText">0 / 13</strong>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-section-title">Foundation</div>
+        <a class="nav-item" href="#tables" data-section="tables">
+          <span class="nav-num">01</span> Creating Tables
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#select" data-section="select">
+          <span class="nav-num">02</span> Querying Basics
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#filtering" data-section="filtering">
+          <span class="nav-num">03</span> Filtering Data
+          <span class="nav-check">✓</span>
+        </a>
+
+        <div class="nav-section-title">Aggregation</div>
+        <a class="nav-item" href="#aggregates" data-section="aggregates">
+          <span class="nav-num">04</span> Aggregate Functions
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#grouping" data-section="grouping">
+          <span class="nav-num">05</span> GROUP BY &amp; HAVING
+          <span class="nav-check">✓</span>
+        </a>
+
+        <div class="nav-section-title">Joins &amp; Unions</div>
+        <a class="nav-item" href="#joins" data-section="joins">
+          <span class="nav-num">06</span> SQL Joins
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#unions" data-section="unions">
+          <span class="nav-num">07</span> Unions &amp; Set Ops
+          <span class="nav-check">✓</span>
+        </a>
+
+        <div class="nav-section-title">Advanced</div>
+        <a class="nav-item" href="#case" data-section="case">
+          <span class="nav-num">08</span> CASE &amp; Type Casting
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#subqueries" data-section="subqueries">
+          <span class="nav-num">09</span> Subqueries
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#window" data-section="window">
+          <span class="nav-num">10</span> Window Functions
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#strings" data-section="strings">
+          <span class="nav-num">11</span> String Functions
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#views" data-section="views">
+          <span class="nav-num">12</span> Views, CTEs &amp; Temp
+          <span class="nav-check">✓</span>
+        </a>
+        <a class="nav-item" href="#procedures" data-section="procedures">
+          <span class="nav-num">13</span> Stored Procedures
+          <span class="nav-check">✓</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- ── Main Content ─────────────────────────── -->
+    <main class="main-content">
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-badge"><span class="dot"></span> Comprehensive SQL Reference</div>
+          <h2>Master <span class="highlight">SQL</span> from<br/>Zero to Advanced</h2>
+          <p class="hero-description">
+            An interactive guide covering everything from <strong>CREATE TABLE</strong> to
+            <strong>window functions</strong>, <strong>CTEs</strong>, and <strong>stored procedures</strong>.
+            Built from real-world examples by Fang Ying &amp; Sham.
+          </p>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-value">13</span>
+              <span class="hero-stat-label">Lessons</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-value">50+</span>
+              <span class="hero-stat-label">Examples</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-value">4</span>
+              <span class="hero-stat-label">Skill Levels</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── LESSONS ─────────────────────────────── -->
+      <div class="lessons-container">
+
+        <!-- ╔══ 01 · Creating Tables ══════════════╗ -->
+        <section class="lesson-section" id="tables">
+          <div class="lesson-header">
+            <div class="lesson-number">📋 Lesson 01</div>
+            <h3 class="lesson-title">Creating Tables</h3>
+          </div>
+          <p class="lesson-description">
+            Every database starts with tables. Use <code>CREATE TABLE</code> to define your schema —
+            columns, data types, primary keys, and foreign key relationships. Here's the sample database
+            we'll use throughout this guide:
+          </p>
+
+          <div class="table-diagram">
+            <div class="db-table">
+              <div class="db-table-header">🗂 customer</div>
+              <div class="db-table-rows">
+                <div class="db-table-row"><span class="col-name">CustomerID</span><span><span class="col-type">int</span><span class="pk">PK</span></span></div>
+                <div class="db-table-row"><span class="col-name">CustomerFirstName</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">CustomerLastName</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">CustomerAddress</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">CustomerCity</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">CustomerPostCode</span><span class="col-type">char(4)</span></div>
+                <div class="db-table-row"><span class="col-name">CustomerPhoneNumber</span><span class="col-type">char(12)</span></div>
+              </div>
+            </div>
+            <div class="db-table">
+              <div class="db-table-header">📦 inventory</div>
+              <div class="db-table-rows">
+                <div class="db-table-row"><span class="col-name">InventoryID</span><span><span class="col-type">tinyint</span><span class="pk">PK</span></span></div>
+                <div class="db-table-row"><span class="col-name">InventoryName</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">InventoryDescription</span><span class="col-type">varchar(255)</span></div>
+              </div>
+            </div>
+            <div class="db-table">
+              <div class="db-table-header">👤 employee</div>
+              <div class="db-table-rows">
+                <div class="db-table-row"><span class="col-name">EmployeeID</span><span><span class="col-type">tinyint</span><span class="pk">PK</span></span></div>
+                <div class="db-table-row"><span class="col-name">EmployeeFirstName</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">EmployeeLastName</span><span class="col-type">varchar(50)</span></div>
+                <div class="db-table-row"><span class="col-name">EmployeeExtension</span><span class="col-type">char(4)</span></div>
+              </div>
+            </div>
+            <div class="db-table">
+              <div class="db-table-header">💰 sale</div>
+              <div class="db-table-rows">
+                <div class="db-table-row"><span class="col-name">SaleID</span><span><span class="col-type">tinyint</span><span class="pk">PK</span></span></div>
+                <div class="db-table-row"><span class="col-name">CustomerID</span><span><span class="col-type">int</span><span class="fk">FK</span></span></div>
+                <div class="db-table-row"><span class="col-name">InventoryID</span><span><span class="col-type">tinyint</span><span class="fk">FK</span></span></div>
+                <div class="db-table-row"><span class="col-name">EmployeeID</span><span><span class="col-type">tinyint</span><span class="fk">FK</span></span></div>
+                <div class="db-table-row"><span class="col-name">SaleDate</span><span class="col-type">date</span></div>
+                <div class="db-table-row"><span class="col-name">SaleQuantity</span><span class="col-type">int</span></div>
+                <div class="db-table-row"><span class="col-name">SaleUnitPrice</span><span class="col-type">smallmoney</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔧</div>
+              <h4>CREATE TABLE Syntax</h4>
+            </div>
+            <p>Define a table with columns, data types, and constraints. Use <code>NOT NULL</code> for required fields,
+            and <code>REFERENCES</code> for foreign key relationships.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>CREATE TABLE dbo.customer (
+  CustomerID        int          NOT NULL PRIMARY KEY,
+  CustomerFirstName varchar(50)  NOT NULL,
+  CustomerLastName  varchar(50)  NOT NULL,
+  CustomerAddress   varchar(50)  NOT NULL,
+  CustomerSuburb    varchar(50)  NULL,
+  CustomerCity      varchar(50)  NOT NULL,
+  CustomerPostCode  char(4)      NULL,
+  CustomerPhoneNumber char(12)   NULL
+);
+
+CREATE TABLE dbo.sale (
+  SaleID       tinyint    NOT NULL PRIMARY KEY,
+  CustomerID   int        NOT NULL REFERENCES customer(CustomerID),
+  InventoryID  tinyint    NOT NULL REFERENCES Inventory(InventoryID),
+  EmployeeID   tinyint    NOT NULL REFERENCES Employee(EmployeeID),
+  SaleDate     date       NOT NULL,
+  SaleQuantity int        NOT NULL,
+  SaleUnitPrice smallmoney NOT NULL
+);</pre></div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Use <code>SELECT * FROM information_schema.tables</code> to see all tables in your database.</div>
+          </div>
+        </section>
+
+        <!-- ╔══ 02 · Querying Basics ══════════════╗ -->
+        <section class="lesson-section" id="select">
+          <div class="lesson-header">
+            <div class="lesson-number">🔍 Lesson 02</div>
+            <h3 class="lesson-title">Querying Basics</h3>
+          </div>
+          <p class="lesson-description">
+            <code>SELECT</code> is the bread and butter of SQL. Learn how to retrieve data, limit results,
+            sort output, and remove duplicates.
+          </p>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔝</div>
+              <h4>TOP — Limiting Results</h4>
+            </div>
+            <p>Retrieve only the first N rows, or a percentage of the total results.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Show only the first 2 rows
+SELECT TOP 2 * FROM customer;
+
+-- Show the first 40% of rows
+SELECT TOP 40 PERCENT * FROM customer;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📊</div>
+              <h4>ORDER BY — Sorting Results</h4>
+            </div>
+            <p>Sort results in ascending (default) or descending order. You can sort by column name or column position number.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Sort by last name descending
+SELECT CustomerFirstName, CustomerLastName
+FROM customer
+ORDER BY CustomerLastName DESC;
+
+-- Sort by column position (no need to type column name)
+SELECT CustomerFirstName, CustomerLastName
+FROM customer
+ORDER BY 4, 2, 3 DESC;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">✨</div>
+              <h4>DISTINCT &amp; INTO</h4>
+            </div>
+            <p>Use <code>DISTINCT</code> to return only unique values. Use <code>INTO</code> to save query results into a new table.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Only show unique last names
+SELECT DISTINCT CustomerLastName FROM customer
+ORDER BY CustomerLastName;
+
+-- Save result into a new table
+SELECT DISTINCT CustomerLastName INTO temp
+FROM customer
+ORDER BY CustomerLastName;</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 03 · Filtering Data ═══════════════╗ -->
+        <section class="lesson-section" id="filtering">
+          <div class="lesson-header">
+            <div class="lesson-number">🔎 Lesson 03</div>
+            <h3 class="lesson-title">Filtering Data</h3>
+          </div>
+          <p class="lesson-description">
+            The <code>WHERE</code> clause lets you filter rows based on conditions. SQL provides
+            powerful operators like <code>LIKE</code>, <code>IN</code>, <code>BETWEEN</code>, and <code>IS NULL</code>.
+          </p>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔤</div>
+              <h4>LIKE — Pattern Matching</h4>
+            </div>
+            <p>Search for patterns in text columns. Use <code>_</code> for a single character and <code>%</code> for zero or more characters.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- _ matches exactly one character
+-- % matches zero, one, or multiple characters
+SELECT * FROM customer
+WHERE CustomerLastName LIKE '_r%';</pre></div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> <code>'_r%'</code> finds names where the 2nd character is 'r' — e.g., Brown, Cross, Arnold.</div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📋</div>
+              <h4>IN — Match Multiple Values</h4>
+            </div>
+            <p>Check if a value exists in a list — cleaner than chaining multiple <code>OR</code> conditions.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>SELECT * FROM customer
+WHERE CustomerLastName IN ('Brown', 'Michael', 'Jim');</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">↔️</div>
+              <h4>BETWEEN, NULL Checks &amp; Comparison</h4>
+            </div>
+            <p>Use <code>BETWEEN</code> for ranges, <code>IS NULL</code> / <code>IS NOT NULL</code> for null checks, and <code>&lt;&gt;</code> for "not equal".</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Range filter
+SELECT * FROM sale
+WHERE SaleUnitPrice BETWEEN 5 AND 10;
+
+-- Check for NULL values
+SELECT * FROM customer
+WHERE CustomerLastName IS NULL;
+
+-- Not equal
+SELECT * FROM customer
+WHERE CustomerLastName &lt;&gt; 'Brown';
+
+-- Comparison with OR
+SELECT * FROM customer
+WHERE CustomerLastName > 'Brown' OR CustomerLastName > 'Cross';</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 04 · Aggregate Functions ═══════════╗ -->
+        <section class="lesson-section" id="aggregates">
+          <div class="lesson-header">
+            <div class="lesson-number">📈 Lesson 04</div>
+            <h3 class="lesson-title">Aggregate Functions</h3>
+          </div>
+          <p class="lesson-description">
+            Aggregate functions perform calculations across sets of rows and return a single value.
+            They're essential for reporting, analytics, and data summarization.
+          </p>
+
+          <table class="comparison-table">
+            <thead>
+              <tr><th>Function</th><th>Description</th><th>Example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>COUNT(*)</code></td><td>Number of rows</td><td><code>SELECT COUNT(*) FROM customer</code></td></tr>
+              <tr><td><code>SUM(col)</code></td><td>Total of a numeric column</td><td><code>SELECT SUM(SaleQuantity) FROM sale</code></td></tr>
+              <tr><td><code>MAX(col)</code></td><td>Largest value</td><td><code>SELECT MAX(Salary) FROM EmployeeSalary</code></td></tr>
+              <tr><td><code>MIN(col)</code></td><td>Smallest value</td><td><code>SELECT MIN(Salary) FROM EmployeeSalary</code></td></tr>
+              <tr><td><code>AVG(col)</code></td><td>Average value</td><td><code>SELECT AVG(Salary) FROM EmployeeSalary</code></td></tr>
+            </tbody>
+          </table>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔢</div>
+              <h4>COUNT with Alias</h4>
+            </div>
+            <p>Use <code>AS</code> to give a temporary alias to a column for readability.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>SELECT COUNT(*) AS [Number of Records]
+FROM customer
+WHERE CustomerFirstName LIKE 'B%';</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📅</div>
+              <h4>Aggregate by Month</h4>
+            </div>
+            <p>Use the <code>MONTH()</code> function to extract the month from a date column and group by it.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>SELECT
+  MONTH(SaleDate) AS [Month],
+  COUNT(*) AS [Number of Sales],
+  SUM(SaleQuantity * SaleUnitPrice) AS [Total Amount]
+FROM sale
+GROUP BY MONTH(SaleDate);</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 05 · GROUP BY & HAVING ═════════════╗ -->
+        <section class="lesson-section" id="grouping">
+          <div class="lesson-header">
+            <div class="lesson-number">📊 Lesson 05</div>
+            <h3 class="lesson-title">GROUP BY &amp; HAVING</h3>
+          </div>
+          <p class="lesson-description">
+            <code>GROUP BY</code> organizes rows into groups for aggregation. <code>HAVING</code> filters
+            groups after aggregation — it's like <code>WHERE</code> but for aggregate results.
+          </p>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📦</div>
+              <h4>SUM with GROUP BY</h4>
+            </div>
+            <p>Group sales by employee and calculate totals for each.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>SELECT
+  sale.EmployeeID,
+  EmployeeFirstName,
+  EmployeeLastName,
+  COUNT(*) AS [Number of Orders],
+  SUM(SaleQuantity) AS [Total Quantity]
+FROM sale, employee
+WHERE sale.EmployeeID = employee.EmployeeID
+GROUP BY sale.EmployeeID, EmployeeFirstName, EmployeeLastName;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔒</div>
+              <h4>HAVING — Filter After Grouping</h4>
+            </div>
+            <p><code>WHERE</code> filters rows <em>before</em> grouping. <code>HAVING</code> filters groups <em>after</em> aggregation.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Only show job titles with more than 1 employee
+SELECT JobTitle, COUNT(JobTitle)
+FROM EmployeeDemographics ED
+JOIN EmployeeSalary ES ON ED.EmployeeID = ES.EmployeeID
+GROUP BY JobTitle
+HAVING COUNT(JobTitle) > 1;
+
+-- Only show job titles with average salary above 45k
+SELECT JobTitle, AVG(Salary)
+FROM EmployeeDemographics ED
+JOIN EmployeeSalary ES ON ED.EmployeeID = ES.EmployeeID
+GROUP BY JobTitle
+HAVING AVG(Salary) > 45000
+ORDER BY AVG(Salary);</pre></div>
+            </div>
+            <div class="warning"><span class="tip-icon">⚠️</span> You cannot use <code>WHERE</code> with aggregate functions. Use <code>HAVING</code> instead.</div>
+          </div>
+        </section>
+
+        <!-- ╔══ 06 · SQL Joins ═════════════════════╗ -->
+        <section class="lesson-section" id="joins">
+          <div class="lesson-header">
+            <div class="lesson-number">🔗 Lesson 06</div>
+            <h3 class="lesson-title">SQL Joins</h3>
+          </div>
+          <p class="lesson-description">
+            Joins combine rows from two or more tables based on a related column. They are the
+            core mechanism for working with relational data.
+          </p>
+
+          <table class="comparison-table mb-md">
+            <thead>
+              <tr><th>Join Type</th><th>Returns</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>INNER JOIN</code></td><td>Only matching rows from both tables</td></tr>
+              <tr><td><code>LEFT JOIN</code></td><td>All rows from left + matching from right (NULLs where no match)</td></tr>
+              <tr><td><code>RIGHT JOIN</code></td><td>All rows from right + matching from left</td></tr>
+              <tr><td><code>FULL OUTER JOIN</code></td><td>All rows from both tables (NULLs where no match)</td></tr>
+              <tr><td><code>CROSS JOIN</code></td><td>Every combination of rows (Cartesian product)</td></tr>
+              <tr><td><code>SELF JOIN</code></td><td>A table joined with itself (for hierarchies)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🤝</div>
+              <h4>INNER JOIN</h4>
+            </div>
+            <p>Returns only the rows where a match exists in both tables.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Explicit join syntax
+SELECT
+  InventoryName, SaleDate, SaleUnitPrice,
+  SaleQuantity, SaleUnitPrice * SaleQuantity AS [Total Amount]
+FROM inventory
+INNER JOIN sale ON sale.InventoryID = inventory.InventoryID
+ORDER BY InventoryName;
+
+-- Implicit join (older syntax, same result)
+SELECT * FROM inventory, sale
+WHERE sale.InventoryID = inventory.InventoryID;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">⬅️</div>
+              <h4>LEFT JOIN &amp; RIGHT JOIN</h4>
+            </div>
+            <p>LEFT JOIN keeps all rows from the left table. RIGHT JOIN keeps all from the right.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- LEFT JOIN: show all inventory, even those with no sales
+SELECT inventory.InventoryID, InventoryName
+FROM inventory
+LEFT JOIN sale ON sale.InventoryID = inventory.InventoryID;
+
+-- Find inventory items with NO sales
+SELECT inventory.InventoryID, InventoryName
+FROM inventory
+LEFT JOIN sale ON sale.InventoryID = inventory.InventoryID
+WHERE sale.InventoryID IS NULL;
+
+-- Same result using a subquery (no join needed)
+SELECT InventoryID, InventoryName FROM inventory
+WHERE InventoryID NOT IN (SELECT InventoryID FROM sale);</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔄</div>
+              <h4>SELF JOIN — Hierarchies</h4>
+            </div>
+            <p>Join a table to itself — commonly used to process hierarchy data like employee/manager relationships.</p>
+
+            <table class="comparison-table mb-md">
+              <thead><tr><th>EmployeeID</th><th>Name</th><th>ManagerID</th></tr></thead>
+              <tbody>
+                <tr><td>1001</td><td>Tan Mei Ling</td><td><em>NULL</em></td></tr>
+                <tr><td>1002</td><td>Kelvin Koh</td><td>1001</td></tr>
+                <tr><td>1003</td><td>Amin Wong</td><td>1002</td></tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- INNER JOIN: only employees who HAVE a manager
+SELECT
+  E.EmployeeID,
+  E.EmployeeFirstName + ' ' + E.EmployeeLastName AS [Full Name],
+  E.ManagerID,
+  M.EmployeeFirstName + ' ' + M.EmployeeLastName AS [Manager Name]
+FROM staff E
+INNER JOIN staff M ON E.ManagerID = M.EmployeeID;
+
+-- LEFT OUTER JOIN: show ALL employees (including the top boss)
+SELECT
+  E.EmployeeID,
+  E.EmployeeFirstName + ' ' + E.EmployeeLastName AS [Full Name],
+  E.ManagerID,
+  M.EmployeeFirstName + ' ' + M.EmployeeLastName AS [Manager Name]
+FROM staff E
+LEFT OUTER JOIN staff M ON E.ManagerID = M.EmployeeID;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">✖️</div>
+              <h4>CROSS JOIN &amp; FULL OUTER JOIN</h4>
+            </div>
+            <p><code>CROSS JOIN</code> produces every combination of rows (Cartesian product). <code>FULL OUTER JOIN</code> returns all rows from both tables.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- CROSS JOIN: all combinations
+SELECT * FROM inventory1
+CROSS JOIN inventory2;
+
+-- FULL OUTER JOIN: everything from both tables
+SELECT sale.InventoryID, InventoryName
+FROM inventory
+FULL OUTER JOIN sale ON sale.InventoryID = inventory.InventoryID
+WHERE sale.InventoryID IS NULL;</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 07 · Unions & Set Operations ═══════╗ -->
+        <section class="lesson-section" id="unions">
+          <div class="lesson-header">
+            <div class="lesson-number">🔀 Lesson 07</div>
+            <h3 class="lesson-title">Unions &amp; Set Operations</h3>
+          </div>
+          <p class="lesson-description">
+            Set operations combine the results of two queries. Unlike joins, they stack rows vertically.
+            Both queries must have the same number of columns with matching data types.
+          </p>
+
+          <table class="comparison-table mb-md">
+            <thead><tr><th>Operation</th><th>Duplicates?</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>UNION</code></td><td>Removed</td><td>Combine & deduplicate</td></tr>
+              <tr><td><code>UNION ALL</code></td><td>Kept</td><td>Combine everything</td></tr>
+              <tr><td><code>INTERSECT</code></td><td>Removed</td><td>Only rows in both queries</td></tr>
+              <tr><td><code>EXCEPT</code></td><td>Removed</td><td>Only rows in the first query</td></tr>
+            </tbody>
+          </table>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔗</div>
+              <h4>UNION vs UNION ALL</h4>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- UNION: merge and remove duplicates
+SELECT cust_lname, cust_fname FROM customer
+UNION
+SELECT cust_lname, cust_fname FROM customer_2;
+
+-- UNION ALL: merge and keep all rows, including duplicates
+SELECT cust_lname, cust_fname FROM customer
+UNION ALL
+SELECT cust_lname, cust_fname FROM customer_2;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🎯</div>
+              <h4>INTERSECT &amp; EXCEPT</h4>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- INTERSECT: only rows common to both tables
+SELECT cust_lname, cust_fname FROM customer
+INTERSECT
+SELECT cust_lname, cust_fname FROM customer_2;
+
+-- EXCEPT: rows in customer that are NOT in customer_2
+SELECT cust_lname, cust_fname FROM customer
+EXCEPT
+SELECT cust_lname, cust_fname FROM customer_2;</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 08 · CASE & Type Casting ═══════════╗ -->
+        <section class="lesson-section" id="case">
+          <div class="lesson-header">
+            <div class="lesson-number">🔀 Lesson 08</div>
+            <h3 class="lesson-title">CASE Statements &amp; Type Casting</h3>
+          </div>
+          <p class="lesson-description">
+            <code>CASE</code> adds conditional (if-else) logic directly into your queries.
+            <code>CAST</code> and <code>CONVERT</code> let you change data types on-the-fly.
+          </p>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔄</div>
+              <h4>CAST &amp; CONVERT</h4>
+            </div>
+            <p>Temporarily change data types for a query.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- CAST(expression AS datatype)
+SELECT CAST('2017-08-25 00:00:00.000' AS date);
+
+-- CONVERT(data_type, expression, style)
+SELECT CONVERT(date, '2017-08-25 00:00:00.000');</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔀</div>
+              <h4>CASE WHEN ... THEN ... END</h4>
+            </div>
+            <p>Apply conditional logic — categorize data or compute new values based on conditions.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Categorize by age
+SELECT FirstName, LastName, Age,
+  CASE
+    WHEN Age > 30 THEN 'Old'
+    WHEN Age BETWEEN 27 AND 30 THEN 'Young'
+    ELSE 'Baby'
+  END AS AgeCategory
+FROM EmployeeDemographics
+WHERE Age IS NOT NULL
+ORDER BY Age;
+
+-- Calculate salary raises by job title
+SELECT FirstName, LastName, JobTitle, Salary,
+  CASE
+    WHEN JobTitle = 'Salesman'   THEN Salary + (Salary * 0.10)
+    WHEN JobTitle = 'Accountant' THEN Salary + (Salary * 0.05)
+    WHEN JobTitle = 'HR'         THEN Salary + (Salary * 0.000001)
+    ELSE Salary + (Salary * 0.03)
+  END AS SalaryAfterRaise
+FROM EmployeeDemographics ED
+JOIN EmployeeSalary ES ON ED.EmployeeID = ES.EmployeeID;</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 09 · Subqueries ════════════════════╗ -->
+        <section class="lesson-section" id="subqueries">
+          <div class="lesson-header">
+            <div class="lesson-number">🧩 Lesson 09</div>
+            <h3 class="lesson-title">Subqueries</h3>
+          </div>
+          <p class="lesson-description">
+            A subquery is a query nested inside another query. They can appear in the <code>SELECT</code>,
+            <code>FROM</code>, or <code>WHERE</code> clause — each with a different use case.
+          </p>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📌</div>
+              <h4>Subquery in SELECT</h4>
+            </div>
+            <p>Embed a query inside a column expression to compute a value alongside each row.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Show each employee's salary alongside the overall average
+SELECT EmployeeID, Salary,
+  (SELECT AVG(Salary) FROM EmployeeSalary) AS AllAvgSalary
+FROM EmployeeSalary;
+
+-- Equivalent using window function
+SELECT EmployeeID, Salary,
+  AVG(Salary) OVER () AS AllAvgSalary
+FROM EmployeeSalary;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📂</div>
+              <h4>Subquery in FROM &amp; WHERE</h4>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Subquery in FROM (derived table)
+SELECT a.EmployeeID, AllAvgSalary
+FROM (
+  SELECT EmployeeID, Salary, AVG(Salary) OVER () AS AllAvgSalary
+  FROM EmployeeSalary
+) a
+ORDER BY a.EmployeeID;
+
+-- Subquery in WHERE: employees over 30
+SELECT EmployeeID, JobTitle, Salary
+FROM EmployeeSalary
+WHERE EmployeeID IN (
+  SELECT EmployeeID FROM EmployeeDemographics
+  WHERE Age > 30
+);
+
+-- Find employees with the highest salary
+SELECT EmployeeID, JobTitle, Salary
+FROM EmployeeSalary
+WHERE Salary IN (SELECT MAX(Salary) FROM EmployeeSalary);</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 10 · Window / Ranking Functions ════╗ -->
+        <section class="lesson-section" id="window">
+          <div class="lesson-header">
+            <div class="lesson-number">🏅 Lesson 10</div>
+            <h3 class="lesson-title">Window &amp; Ranking Functions</h3>
+          </div>
+          <p class="lesson-description">
+            Window functions compute values across a set of rows related to the current row —
+            without collapsing the result set like <code>GROUP BY</code> does.
+          </p>
+
+          <table class="comparison-table mb-md">
+            <thead><tr><th>Function</th><th>Duplicates Get…</th><th>Gaps?</th></tr></thead>
+            <tbody>
+              <tr><td><code>ROW_NUMBER()</code></td><td>Different ranks</td><td>No</td></tr>
+              <tr><td><code>RANK()</code></td><td>Same rank</td><td>Yes (skips)</td></tr>
+              <tr><td><code>DENSE_RANK()</code></td><td>Same rank</td><td>No (consecutive)</td></tr>
+              <tr><td><code>NTILE(n)</code></td><td>Distributed into n groups</td><td>N/A</td></tr>
+            </tbody>
+          </table>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">1️⃣</div>
+              <h4>ROW_NUMBER()</h4>
+            </div>
+            <p>Assigns a unique sequential number to each row. Even rows with identical values get different numbers.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>SELECT *,
+  ROW_NUMBER() OVER (ORDER BY Salary DESC) AS SalaryRank
+FROM EmployeeSalary;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🥇</div>
+              <h4>RANK() vs DENSE_RANK()</h4>
+            </div>
+            <p><code>RANK()</code> skips numbers after ties. <code>DENSE_RANK()</code> keeps them consecutive.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- RANK: ties get same rank, then skip (1, 2, 2, 4)
+SELECT *,
+  RANK() OVER (ORDER BY Salary DESC) AS SalaryRank
+FROM EmployeeSalary;
+
+-- DENSE_RANK: ties get same rank, no skip (1, 2, 2, 3)
+SELECT *,
+  DENSE_RANK() OVER (ORDER BY Salary DESC) AS SalaryRank
+FROM EmployeeSalary;
+
+-- With PARTITION BY: rank within each job title group
+SELECT *,
+  RANK() OVER (PARTITION BY JobTitle ORDER BY Salary DESC) AS SalaryRank
+FROM EmployeeSalary
+ORDER BY JobTitle, SalaryRank;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📊</div>
+              <h4>NTILE(n) &amp; PARTITION BY</h4>
+            </div>
+            <p>Divide rows into <em>n</em> roughly equal groups. <code>PARTITION BY</code> returns a per-row value without collapsing rows.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Split into 3 salary groups
+SELECT *,
+  NTILE(3) OVER (ORDER BY Salary DESC) AS SalaryGroup
+FROM EmployeeSalary;
+
+-- PARTITION BY: count per gender alongside each row
+SELECT FirstName, LastName, Gender, Salary,
+  COUNT(Gender) OVER (PARTITION BY Gender) AS TotalGender
+FROM EmployeeDemographics ED
+JOIN EmployeeSalary ES ON ED.EmployeeID = ES.EmployeeID;</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 11 · String Functions ══════════════╗ -->
+        <section class="lesson-section" id="strings">
+          <div class="lesson-header">
+            <div class="lesson-number">🔤 Lesson 11</div>
+            <h3 class="lesson-title">String Functions</h3>
+          </div>
+          <p class="lesson-description">
+            SQL provides powerful string manipulation functions for cleaning, transforming, and extracting text data.
+          </p>
+
+          <table class="comparison-table mb-md">
+            <thead><tr><th>Function</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>TRIM()</code></td><td>Remove leading & trailing spaces</td></tr>
+              <tr><td><code>LTRIM() / RTRIM()</code></td><td>Remove left/right spaces only</td></tr>
+              <tr><td><code>REPLACE(str, old, new)</code></td><td>Replace occurrences of a substring</td></tr>
+              <tr><td><code>SUBSTRING(str, start, len)</code></td><td>Extract part of a string</td></tr>
+              <tr><td><code>UPPER() / LOWER()</code></td><td>Change case</td></tr>
+              <tr><td><code>CHARINDEX(sub, str)</code></td><td>Find position of a substring</td></tr>
+              <tr><td><code>LEN(str)</code></td><td>Get string length</td></tr>
+              <tr><td><code>PARSENAME(str, piece)</code></td><td>Extract dot-separated parts (right to left)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">✂️</div>
+              <h4>TRIM, REPLACE &amp; Case</h4>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Remove spaces
+SELECT EmployeeID, TRIM(EmployeeID) AS IDTRIM FROM EmployeeErrors;
+SELECT EmployeeID, LTRIM(EmployeeID) AS IDLTRIM FROM EmployeeErrors;
+
+-- Replace unwanted text
+SELECT LastName,
+  REPLACE(LastName, '- Fired', '') AS LastNameFixed
+FROM EmployeeErrors;
+
+-- Change case
+SELECT FirstName, UPPER(FirstName) FROM EmployeeErrors;
+SELECT FirstName, LOWER(FirstName) FROM EmployeeErrors;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🔪</div>
+              <h4>Splitting Strings by Delimiter</h4>
+            </div>
+            <p>Split addresses or other delimited data using <code>SUBSTRING</code> + <code>CHARINDEX</code>,
+            or <code>PARSENAME</code> + <code>REPLACE</code>.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Method 1: SUBSTRING + CHARINDEX
+SELECT PropertyAddress,
+  SUBSTRING(PropertyAddress, 1,
+    CHARINDEX(',', PropertyAddress) - 1) AS Address,
+  SUBSTRING(PropertyAddress,
+    CHARINDEX(',', PropertyAddress) + 1,
+    LEN(PropertyAddress)) AS City
+FROM NashvilleHousing;
+
+-- Method 2: PARSENAME (works with dots, so replace commas first)
+-- Note: PARSENAME numbers right-to-left!
+SELECT OwnerAddress,
+  PARSENAME(REPLACE(OwnerAddress, ',', '.'), 3) AS Street,
+  PARSENAME(REPLACE(OwnerAddress, ',', '.'), 2) AS City,
+  PARSENAME(REPLACE(OwnerAddress, ',', '.'), 1) AS State
+FROM NashvilleHousing;</pre></div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> <code>PARSENAME</code> is designed for dot-separated object names, but works great as a quick string splitter when combined with <code>REPLACE</code>.</div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🧹</div>
+              <h4>Fuzzy Matching with SUBSTRING</h4>
+            </div>
+            <p>Join tables on partial string matches to handle messy data.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>SELECT
+  SUBSTRING(err.FirstName, 1, 3),
+  SUBSTRING(dem.FirstName, 1, 3),
+  SUBSTRING(err.LastName, 1, 3),
+  SUBSTRING(dem.LastName, 1, 3)
+FROM EmployeeErrors err
+JOIN EmployeeDemographics dem
+  ON SUBSTRING(err.FirstName, 1, 3) = SUBSTRING(dem.FirstName, 1, 3)
+  AND SUBSTRING(err.LastName, 1, 3) = SUBSTRING(dem.LastName, 1, 3);</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 12 · Views, CTEs & Temp Tables ═════╗ -->
+        <section class="lesson-section" id="views">
+          <div class="lesson-header">
+            <div class="lesson-number">👁️ Lesson 12</div>
+            <h3 class="lesson-title">Views, CTEs &amp; Temp Tables</h3>
+          </div>
+          <p class="lesson-description">
+            SQL provides multiple ways to create reusable or temporary result sets. Each has
+            different persistence and use cases.
+          </p>
+
+          <table class="comparison-table mb-md">
+            <thead><tr><th>Feature</th><th>Persists?</th><th>Updates with base?</th><th>Where stored?</th></tr></thead>
+            <tbody>
+              <tr><td><code>VIEW</code></td><td>Yes</td><td>✅ Yes</td><td>Database</td></tr>
+              <tr><td><code>#Temp Table</code></td><td>Session</td><td>❌ No</td><td>Tempdb</td></tr>
+              <tr><td><code>CTE</code></td><td>Query only</td><td>N/A</td><td>Memory</td></tr>
+            </tbody>
+          </table>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">👁️</div>
+              <h4>CREATE VIEW</h4>
+            </div>
+            <p>A view is a saved query that acts like a virtual table. It always reflects current data.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>CREATE VIEW CustomerView AS
+SELECT
+  CustomerFirstName + ' ' + CustomerLastName AS [Customer Name],
+  CustomerPhoneNumber,
+  InventoryName, SaleDate, SaleQuantity, SaleUnitPrice,
+  SaleQuantity * SaleUnitPrice AS [Total Amount]
+FROM customer
+INNER JOIN sale ON customer.CustomerID = sale.CustomerID
+INNER JOIN inventory ON sale.InventoryID = inventory.InventoryID;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">#️⃣</div>
+              <h4>Temp Tables</h4>
+            </div>
+            <p>Prefixed with <code>#</code>, temp tables live in <code>tempdb</code> and disappear when the session ends.
+            They support all CRUD operations.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>DROP TABLE IF EXISTS #temp_Employee;
+
+CREATE TABLE #temp_Employee (
+  JobTitle       varchar(100),
+  EmployeesPerJob int,
+  AvgAge         int,
+  AvgSalary      int
+);
+
+INSERT INTO #temp_Employee
+SELECT JobTitle, COUNT(JobTitle), AVG(Age), AVG(Salary)
+FROM EmployeeDemographics emp
+JOIN EmployeeSalary sal ON emp.EmployeeID = sal.EmployeeID
+GROUP BY JobTitle;
+
+SELECT * FROM #temp_Employee;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">📎</div>
+              <h4>CTE — Common Table Expression</h4>
+            </div>
+            <p>A CTE creates a temporary named result set that exists only for the duration of a single query.
+            Defined with <code>WITH ... AS</code>.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>WITH CTE_Employee AS (
+  SELECT FirstName, LastName, Gender, Salary,
+    COUNT(Gender) OVER (PARTITION BY Gender) AS TotalGender
+  FROM EmployeeDemographics ED
+  JOIN EmployeeSalary ES ON ED.EmployeeID = ES.EmployeeID
+  WHERE Salary > 45000
+)
+SELECT FirstName, LastName, Gender, TotalGender
+FROM CTE_Employee
+WHERE TotalGender = (SELECT MIN(TotalGender) FROM CTE_Employee);</pre></div>
+            </div>
+            <div class="warning"><span class="tip-icon">⚠️</span> CTEs are stored in memory — you cannot create indexes on them. Use temp tables for large datasets that need indexing.</div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🧹</div>
+              <h4>Remove Duplicate Records</h4>
+            </div>
+            <p>Combine <code>ROW_NUMBER()</code> with a CTE to identify and delete duplicates.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>WITH RowNumCTE AS (
+  SELECT *,
+    ROW_NUMBER() OVER (
+      PARTITION BY ParcelID, PropertyAddress,
+                   SalePrice, SaleDate, LegalReference
+      ORDER BY UniqueID
+    ) AS row_num
+  FROM NashvilleHousing
+)
+-- Step 1: Preview duplicates
+SELECT * FROM RowNumCTE WHERE row_num > 1;
+
+-- Step 2: Delete them (uncomment DELETE, comment SELECT)
+-- DELETE FROM RowNumCTE WHERE row_num > 1;</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ╔══ 13 · Stored Procedures ═════════════╗ -->
+        <section class="lesson-section" id="procedures">
+          <div class="lesson-header">
+            <div class="lesson-number">⚙️ Lesson 13</div>
+            <h3 class="lesson-title">Stored Procedures</h3>
+          </div>
+          <p class="lesson-description">
+            Stored procedures are precompiled SQL scripts saved on the server. They accept parameters,
+            encapsulate complex logic, and can be reused with a single <code>EXEC</code> call.
+          </p>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">⚙️</div>
+              <h4>CREATE PROCEDURE with Parameters</h4>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>CREATE PROCEDURE Temp_Employee
+  @JobTitle nvarchar(100)
+AS
+  DROP TABLE IF EXISTS #temp_employee;
+
+  CREATE TABLE #temp_employee (
+    JobTitle       varchar(100),
+    EmployeesPerJob int,
+    AvgAge         int,
+    AvgSalary      int
+  );
+
+  INSERT INTO #temp_employee
+  SELECT JobTitle, COUNT(JobTitle), AVG(Age), AVG(Salary)
+  FROM EmployeeDemographics emp
+  JOIN EmployeeSalary sal ON emp.EmployeeID = sal.EmployeeID
+  WHERE JobTitle = @JobTitle
+  GROUP BY JobTitle;
+
+  SELECT * FROM #temp_employee;
+GO;</pre></div>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">▶️</div>
+              <h4>Execute a Stored Procedure</h4>
+            </div>
+            <p>Once created, call the procedure anytime with different parameter values.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Run the stored procedure with a parameter
+EXEC Temp_Employee @JobTitle = 'Salesman';</pre></div>
+            </div>
+            <div class="tip"><span class="tip-icon">💡</span> Stored procedures are precompiled by the database engine, so they execute faster than ad-hoc queries.</div>
+          </div>
+
+          <div class="topic-card">
+            <div class="topic-card-header">
+              <div class="topic-icon">🛠️</div>
+              <h4>ISNULL — Handle Missing Data</h4>
+            </div>
+            <p>Fill in missing values by pulling from another record. Great for data cleaning.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-header-left"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-label">SQL</span></div>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <div class="code-content"><pre>-- Find rows where PropertyAddress is null and fill from matching ParcelID
+SELECT
+  a.ParcelID, a.PropertyAddress,
+  b.ParcelID, b.PropertyAddress,
+  ISNULL(a.PropertyAddress, b.PropertyAddress) AS FilledAddress
+FROM NashvilleHousing a
+JOIN NashvilleHousing b
+  ON a.ParcelID = b.ParcelID
+  AND a.[UniqueID] &lt;&gt; b.[UniqueID]
+WHERE a.PropertyAddress IS NULL;
+
+-- Update the records
+UPDATE a
+SET PropertyAddress = ISNULL(a.PropertyAddress, b.PropertyAddress)
+FROM NashvilleHousing a
+JOIN NashvilleHousing b
+  ON a.ParcelID = b.ParcelID
+  AND a.[UniqueID] &lt;&gt; b.[UniqueID]
+WHERE a.PropertyAddress IS NULL;</pre></div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /lessons-container -->
+
+      <footer class="footer">
+        <p>SQL Mastery — Interactive Guide &middot; Based on notes by <strong>Fang Ying &amp; Sham</strong></p>
+      </footer>
+    </main>
+  </div>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
