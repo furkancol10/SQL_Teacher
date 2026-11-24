@@ -1,3 +1,5 @@
+> **Yeni sürüm:** Bu proje artık bakım görmüyor. Güncel sürüm: [sql-teacher-svelte](https://github.com/furkancol10/sql-teacher-svelte)
+
 <div align="center">
 
 # SQL Mastery
